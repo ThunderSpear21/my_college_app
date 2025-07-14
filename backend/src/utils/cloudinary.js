@@ -1,5 +1,6 @@
 import { v2 as cloudinary } from "cloudinary";
 import fs from "fs";
+import path from "path";
 
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -10,16 +11,35 @@ cloudinary.config({
 const uploadOnCloudinary = async (filePath) => {
   try {
     if (!filePath) return null;
+    const ext = path.extname(filePath).toLowerCase();
+    let resourceType = null;
+    if (ext === ".pdf") {
+      resourceType = "raw";
+    } else if ([".jpg", ".jpeg", ".png", ".webp"].includes(ext)) {
+      resourceType = "image";
+    } else {
+      if (fs.existsSync(filePath)) {
+        fs.unlinkSync(filePath);
+      }
+      throw new Error(
+        "Unsupported file type. Only images and PDFs are allowed."
+      );
+    }
     const res = await cloudinary.uploader.upload(filePath, {
-      resource_type: "auto",
+      resource_type: resourceType,
     });
 
     console.log("File Uploadaed to Cloudinary Successfully", res);
-    fs.unlinkSync(filePath);
+    if (fs.existsSync(filePath)) {
+      fs.unlinkSync(filePath);
+    }
+    // console.log(res);
     return res;
   } catch (error) {
-    fs.unlinkSync(filePath); // removes the file from local storage as upload has failed
-    return null;
+    if (fs.existsSync(filePath)) {
+      fs.unlinkSync(filePath);
+    }
+    throw error;
   }
 };
 
@@ -28,14 +48,16 @@ const deleteFromCloudinary = async (cloudinaryUrl) => {
     const fileName = cloudinaryUrl.substring(
       cloudinaryUrl.lastIndexOf("/") + 1
     );
-    const publicId = fileName.split(".")[0];
-    const resourceType = cloudinaryUrl.includes("/video/") ? "video" : "image";
+    let resourceType = cloudinaryUrl.includes(".pdf") ? "raw" : "image";
+    let publicId = fileName;
+    if (resourceType === "image") publicId = fileName.split(".")[0];
     const result = await cloudinary.uploader.destroy(publicId, {
       resource_type: resourceType,
     });
     console.log("Deleted from Cloudinary:", result);
   } catch (error) {
     console.error("Error deleting from Cloudinary:", error);
+    throw error;
   }
 };
 

@@ -23,7 +23,7 @@ const getAvailableMentors = asyncHandler(async (req, res) => {
 
 // 2. Send a mentor request to someone
 const sendMenteeRequest = asyncHandler(async (req, res) => {
-  const { mentorId } = req.body;
+  const mentorId = req.params.mentorId;
   const menteeId = req.user._id;
 
   if (!mentorId) throw new apiError(400, "Mentor ID is required");
