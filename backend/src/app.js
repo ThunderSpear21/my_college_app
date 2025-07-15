@@ -23,10 +23,12 @@ import authRouter from "./routes/auth_route.js";
 import connectRoutes from "./routes/connect_route.js";
 import courseRoutes from "./routes/course_route.js";
 import notesRoutes from "./routes/notes_route.js";
+import userRoutes from "./routes/user_route.js";
 
 app.use("/api/auth", authRouter);
 app.use("/api/connect", connectRoutes);
 app.use("/api/course", courseRoutes);
 app.use("/api/notes", notesRoutes);
+app.use("/api/user", userRoutes);
 
 export { app };

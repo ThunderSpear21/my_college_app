@@ -9,7 +9,7 @@ const getAvailableMentors = asyncHandler(async (req, res) => {
   const user = await User.findById(userId);
   const admissionYear = user.yearOfAdmission;
   const availableMentors = await User.find({
-    yearOfAdmission: user.yearOfAdmission,
+    yearOfAdmission: admissionYear-1,
     isMentorEligible: true,
   }).select("-password -refreshToken");
 
