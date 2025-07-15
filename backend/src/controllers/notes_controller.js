@@ -2,6 +2,7 @@ import { asyncHandler } from "../utils/asyncHandler.js";
 import { apiError } from "../utils/apiError.js";
 import { apiResponse } from "../utils/apiResponse.js";
 import { Note } from "../models/notes_model.js";
+import { CourseStructure } from "../models/course_model.js";
 import {
   uploadOnCloudinary,
   deleteFromCloudinary,
@@ -47,7 +48,7 @@ const getAllNotes = asyncHandler(async (req, res) => {
 
   return res
     .status(200)
-    .json(new apiResponse(200, allNotes, "All courses fetched"));
+    .json(new apiResponse(200, allNotes, "All notes fetched"));
 });
 
 const getNotesBySemester = asyncHandler(async (req, res) => {
