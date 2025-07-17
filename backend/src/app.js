@@ -31,4 +31,15 @@ app.use("/api/course", courseRoutes);
 app.use("/api/notes", notesRoutes);
 app.use("/api/user", userRoutes);
 
+app.use((err, req, res, next) => {
+  const statusCode = err.statusCode || 500;
+
+  res.status(statusCode).json({
+    success: false,
+    message: err.message || "Internal Server Error",
+    errors: err.errors || [],
+    data: null,
+  });
+});
+
 export { app };
