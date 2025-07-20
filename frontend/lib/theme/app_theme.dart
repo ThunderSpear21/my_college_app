@@ -68,7 +68,7 @@ class AppTheme {
       ),
     ),
     appBarTheme: const AppBarTheme(
-      backgroundColor: AppColors.darkPrimary,
+      backgroundColor: AppColors.darkBackground,
       foregroundColor: Colors.white,
     ),
     colorScheme: ColorScheme.dark(

@@ -61,9 +61,6 @@ class _LoginScreenState extends State<LoginScreen> {
                   context,
                 ).showSnackBar(SnackBar(content: Text(state.message)));
               } else if (state is LoginSuccess) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Login Successful!')),
-                );
                 Future.microtask(() {
                   Navigator.pushReplacement(
                     context,
