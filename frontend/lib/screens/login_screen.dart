@@ -62,10 +62,15 @@ class _LoginScreenState extends State<LoginScreen> {
                 ).showSnackBar(SnackBar(content: Text(state.message)));
               } else if (state is LoginSuccess) {
                 Future.microtask(() {
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(builder: (_) => const HomeScreen()),
-                  );
+                  FocusScope.of(context).unfocus();
+                  _showLoadingOverlay(context);
+                  Future.delayed(const Duration(seconds: 1), () {
+                    Navigator.pushAndRemoveUntil(
+                      context,
+                      MaterialPageRoute(builder: (_) => const HomeScreen()),
+                      (route) => false,
+                    );
+                  });
                 });
               }
             },
@@ -89,7 +94,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                   ),
                   const SizedBox(height: 32),
-              
+
                   // Email Field
                   TextField(
                     controller: _emailController,
@@ -104,7 +109,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     keyboardType: TextInputType.emailAddress,
                   ),
                   const SizedBox(height: 20),
-              
+
                   // Password Field
                   TextField(
                     controller: _passwordController,
@@ -119,7 +124,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     obscureText: true,
                   ),
                   const SizedBox(height: 10),
-              
+
                   // Forgot Password
                   Align(
                     alignment: Alignment.centerRight,
@@ -131,9 +136,9 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                     ),
                   ),
-              
+
                   const SizedBox(height: 20),
-              
+
                   // Login Button (with loading state handling)
                   BlocBuilder<LoginBloc, LoginState>(
                     builder: (context, state) {
@@ -166,9 +171,9 @@ class _LoginScreenState extends State<LoginScreen> {
                       );
                     },
                   ),
-              
+
                   const SizedBox(height: 16),
-              
+
                   // Register Button
                   ElevatedButton(
                     onPressed: _navigateToRegister,
@@ -193,6 +198,17 @@ class _LoginScreenState extends State<LoginScreen> {
           ),
         ),
       ),
+    );
+  }
+
+  void _showLoadingOverlay(BuildContext context) {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      barrierColor: Colors.black.withOpacity(0.3),
+      builder: (BuildContext context) {
+        return const Center(child: CircularProgressIndicator());
+      },
     );
   }
 }

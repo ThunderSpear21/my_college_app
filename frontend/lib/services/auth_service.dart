@@ -11,17 +11,15 @@ class AuthService {
 
   // --- Token Storage ---
   static Future<void> saveTokens(
-  String accessToken,
-  String refreshToken,
-) async {
-  await SessionManager.saveTokens(accessToken, refreshToken);
-}
-
+    String accessToken,
+    String refreshToken,
+  ) async {
+    await SessionManager.saveTokens(accessToken, refreshToken);
+  }
 
   static Future<void> clearTokens() async {
-  await SessionManager.clearTokens();
-}
-
+    await SessionManager.clearTokens();
+  }
 
   // --- Token Validation ---
   static Future<bool> isAccessTokenValid() async {
@@ -115,38 +113,63 @@ class AuthService {
   }
 
   static Future<void> registerUser(
-  String email,
-  String name,
-  String password,
-  String otp,
-) async {
-  final response = await http.post(
-    Uri.parse('$_baseUrl/register'),
-    headers: {'Content-Type': 'application/json'},
-    body: jsonEncode({
-      'email': email,
-      'name': name,
-      'password': password,
-      'otp': otp,
-    }),
-  );
+    String email,
+    String name,
+    String password,
+    String otp,
+  ) async {
+    final response = await http.post(
+      Uri.parse('$_baseUrl/register'),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode({
+        'email': email,
+        'name': name,
+        'password': password,
+        'otp': otp,
+      }),
+    );
 
-  final contentType = response.headers['content-type'];
-  final isJson = contentType?.contains('application/json') ?? false;
+    final contentType = response.headers['content-type'];
+    final isJson = contentType?.contains('application/json') ?? false;
 
-  if (isJson) {
-    final responseData = jsonDecode(response.body);
-    print(responseData);
+    if (isJson) {
+      final responseData = jsonDecode(response.body);
+      print(responseData);
 
-    if ((response.statusCode == 200 || response.statusCode == 201) &&
-        responseData['success'] == true) {
-      return;
+      if ((response.statusCode == 200 || response.statusCode == 201) &&
+          responseData['success'] == true) {
+        return;
+      } else {
+        throw Exception(responseData['message'] ?? 'Registration failed');
+      }
     } else {
-      throw Exception(responseData['message'] ?? 'Registration failed');
+      print("Non-JSON response: ${response.body}");
+      throw Exception("Unexpected server response.");
     }
-  } else {
-    print("Non-JSON response: ${response.body}");
-    throw Exception("Unexpected server response.");
+  }
+
+  static Future<bool> logout() async {
+  final token = await SessionManager.getAccessToken();
+
+  try {
+    final res = await http.post(
+      Uri.parse('$_baseUrl/logout'),
+      headers: {'Authorization': 'Bearer $token'},
+    );
+
+    if (res.statusCode == 200) {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.remove('accessToken');
+      await prefs.remove('refreshToken');
+      return true;
+    }
+    return false;
+  } catch (e) {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove('accessToken');
+    await prefs.remove('refreshToken');
+    return false;
   }
 }
+
 }

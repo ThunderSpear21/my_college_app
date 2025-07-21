@@ -6,6 +6,7 @@ import '../../services/auth_service.dart';
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
   AuthBloc() : super(AuthInitial()) {
     on<AppStarted>(_onAppStarted);
+    on<LoggedOut>(_logOut);
   }
 
   Future<void> _onAppStarted(AppStarted event, Emitter<AuthState> emit) async {
@@ -22,5 +23,11 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         emit(Unauthenticated());
       }
     }
+  }
+
+  Future<void> _logOut(LoggedOut event, Emitter<AuthState> emit) async {
+    emit(AuthLoading());
+    final res = await AuthService.logout();
+    emit(Unauthenticated());
   }
 }
