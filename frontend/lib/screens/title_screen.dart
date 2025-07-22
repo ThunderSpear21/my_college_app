@@ -17,10 +17,12 @@ class _TitleScreenState extends State<TitleScreen> {
   @override
   void initState() {
     super.initState();
-    
+
     // Trigger auth check after delay
     Future.delayed(const Duration(seconds: 3), () {
-      context.read<AuthBloc>().add(AppStarted());
+      if (mounted) {
+        context.read<AuthBloc>().add(AppStarted());
+      }
     });
   }
 
@@ -93,10 +95,7 @@ class _TitleScreenContent extends StatelessWidget {
                 SizedBox(height: 20),
                 Text(
                   'Initializing app....',
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w400,
-                  ),
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w400),
                 ),
                 SizedBox(height: 20),
               ],

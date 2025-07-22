@@ -99,7 +99,7 @@ class AuthService {
 
     if (isJson) {
       final responseData = jsonDecode(response.body);
-      print(responseData.toString());
+      //print(responseData.toString());
 
       if (response.statusCode == 200 && responseData['success'] == true) {
         return;
@@ -107,7 +107,7 @@ class AuthService {
         throw Exception(responseData['message'] ?? 'Something went wrong');
       }
     } else {
-      print("Non-JSON response: ${response.body}");
+      //print("Non-JSON response: ${response.body}");
       throw Exception("Unexpected server response. Please try again.");
     }
   }
@@ -134,7 +134,7 @@ class AuthService {
 
     if (isJson) {
       final responseData = jsonDecode(response.body);
-      print(responseData);
+      //print(responseData);
 
       if ((response.statusCode == 200 || response.statusCode == 201) &&
           responseData['success'] == true) {
@@ -143,33 +143,31 @@ class AuthService {
         throw Exception(responseData['message'] ?? 'Registration failed');
       }
     } else {
-      print("Non-JSON response: ${response.body}");
+      //print("Non-JSON response: ${response.body}");
       throw Exception("Unexpected server response.");
     }
   }
 
   static Future<bool> logout() async {
-  final token = await SessionManager.getAccessToken();
+    final token = await SessionManager.getAccessToken();
 
-  try {
-    final res = await http.post(
-      Uri.parse('$_baseUrl/logout'),
-      headers: {'Authorization': 'Bearer $token'},
-    );
-
-    if (res.statusCode == 200) {
+    try {
+      final res = await http.post(
+        Uri.parse('$_baseUrl/logout'),
+        headers: {'Authorization': 'Bearer $token'},
+      );
+      if (res.statusCode == 200) {
+        final prefs = await SharedPreferences.getInstance();
+        await prefs.remove('accessToken');
+        await prefs.remove('refreshToken');
+        return true;
+      }
+      return false;
+    } catch (e) {
       final prefs = await SharedPreferences.getInstance();
       await prefs.remove('accessToken');
       await prefs.remove('refreshToken');
-      return true;
+      return false;
     }
-    return false;
-  } catch (e) {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.remove('accessToken');
-    await prefs.remove('refreshToken');
-    return false;
   }
-}
-
 }

@@ -1,10 +1,13 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:frontend/blocs/auth/auth_bloc.dart';
+import 'package:frontend/blocs/auth/auth_event.dart';
 import 'package:frontend/blocs/view_profile/view_profile_event.dart';
 import 'package:frontend/blocs/view_profile/view_profile_state.dart';
 import 'package:frontend/services/user_service.dart';
 
 class ViewProfileBloc extends Bloc<ViewProfileEvent, ViewProfileState> {
-  ViewProfileBloc() : super(const ViewProfileState()) {
+  final AuthBloc authBloc;
+  ViewProfileBloc({required this.authBloc}) : super(const ViewProfileState()) {
     on<ProfileLoadRequested>(_onProfileLoadRequested);
     on<ProfileUpdateSubmitted>(_onProfileUpdateSubmitted);
   }
@@ -42,6 +45,7 @@ class ViewProfileBloc extends Bloc<ViewProfileEvent, ViewProfileState> {
       );
       final updatedUser = updatedUserData?['data'];
       if (updatedUser != null) {
+        authBloc.add(UserUpdated(updatedUser));
         emit(state.copyWith(status: ProfileStatus.success, user: updatedUser));
       } else {
         throw Exception('Failed to update profile');

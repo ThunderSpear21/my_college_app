@@ -7,40 +7,29 @@ import 'package:frontend/blocs/theme/theme_bloc.dart';
 import 'package:frontend/blocs/theme/theme_event.dart';
 import 'package:frontend/screens/login_screen.dart';
 import 'package:frontend/screens/view_profile_screen.dart';
-import 'package:frontend/services/user_service.dart';
 
-class HomeScreen extends StatefulWidget {
+// HomeScreen is now a StatelessWidget because it doesn't manage its own state.
+class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
-  @override
-  State<HomeScreen> createState() => _HomeScreenState();
-}
-
-class _HomeScreenState extends State<HomeScreen> {
-  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-  Map<String, dynamic>? currentUser;
-
-  @override
-  void initState() {
-    super.initState();
-    loadUserData();
-  }
-
-  void loadUserData() async {
-    final data = await UserService.getCurrentUser();
-    if (mounted) {
-      setState(() {
-        currentUser = data;
-      });
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
+    final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
     Size size = MediaQuery.of(context).size;
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+
     return Scaffold(
-      key: _scaffoldKey,
-      drawer: buildAppDrawer(context, isDarkMode),
+      key: scaffoldKey,
+      // Use a BlocBuilder to get the user data for the drawer.
+      drawer: BlocBuilder<AuthBloc, AuthState>(
+        builder: (context, state) {
+          if (state is Authenticated) {
+            return buildAppDrawer(context, isDarkMode, state.user);
+          }
+          // Return an empty drawer if the state is not Authenticated.
+          return const Drawer();
+        },
+      ),
       body: SafeArea(
         child: BlocListener<AuthBloc, AuthState>(
           listener: (context, state) {
@@ -52,113 +41,117 @@ class _HomeScreenState extends State<HomeScreen> {
               );
             }
           },
-          child: Padding(
-            padding: const EdgeInsets.all(12.0),
-            child: SizedBox(
-              width: double.infinity,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  const SizedBox(height: 20),
-                  Container(
-                    height: size.height * 0.3,
-                    width: size.width * 0.9,
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                        colors: [
-                          (Theme.of(context).brightness == Brightness.light)
-                              ? Colors.lightBlue.shade200
-                              : Colors.blue.shade500,
-                          (Theme.of(context).brightness == Brightness.light)
-                              ? Colors.purple.shade200
-                              : Colors.purple,
+          // Use BlocBuilder for the main body to react to state changes.
+          child: BlocBuilder<AuthBloc, AuthState>(
+            builder: (context, state) {
+              // Show a loading indicator for initial, loading, or unauthenticated states.
+              if (state is! Authenticated) {
+                return const Center(child: CircularProgressIndicator());
+              }
+
+              // When the state is Authenticated, build the main UI with user data.
+              final user = state.user;
+              return Padding(
+                padding: const EdgeInsets.all(12.0),
+                child: SizedBox(
+                  width: double.infinity,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      const SizedBox(height: 20),
+                      Container(
+                        height: size.height * 0.3,
+                        width: size.width * 0.9,
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                            colors: [
+                              isDarkMode ? Colors.blue.shade500 : Colors.lightBlue.shade200,
+                              isDarkMode ? Colors.purple : Colors.purple.shade200,
+                            ],
+                          ),
+                          borderRadius: BorderRadius.circular(25),
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            Text(
+                              "Welcome Back,\n${user['name'] ?? 'User'}!",
+                              style: const TextStyle(
+                                fontSize: 26,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(40),
+                                border: Border.all(
+                                  color: isDarkMode ? Colors.white : Colors.black,
+                                  width: 3,
+                                ),
+                              ),
+                              child: IconButton(
+                                onPressed: () {
+                                  scaffoldKey.currentState?.openDrawer();
+                                },
+                                icon: const Icon(Icons.person_2, size: 40),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(height: 30),
+                      GridView.count(
+                        crossAxisCount: 2,
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        mainAxisSpacing: 25,
+                        crossAxisSpacing: 25,
+                        padding: const EdgeInsets.all(12),
+                        children: [
+                          buildNavigationCard(
+                            icon: Icons.school,
+                            text: "Course Structure",
+                            colour: Colors.blue,
+                            onTap: () {},
+                          ),
+                          buildNavigationCard(
+                            icon: Icons.text_snippet,
+                            text: "Notes",
+                            colour: Colors.green,
+                            onTap: () {},
+                          ),
+                          buildNavigationCard(
+                            icon: Icons.people,
+                            text: "Connect",
+                            colour: Colors.purpleAccent,
+                            onTap: () {},
+                          ),
+                          buildNavigationCard(
+                            icon: Icons.checklist_rtl,
+                            text: "Attendance",
+                            colour: Colors.deepOrange,
+                            onTap: () {},
+                          ),
                         ],
                       ),
-                      borderRadius: BorderRadius.circular(25),
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        Text(
-                          "Welcome Back,\n${currentUser?['data']['user']['name'] ?? 'User'}!",
-                          style: TextStyle(
-                            fontSize: 26,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(40),
-                            border: Border.all(
-                              color:
-                                  (Theme.of(context).brightness ==
-                                          Brightness.dark)
-                                      ? Colors.white
-                                      : Colors.black,
-                              width: 3,
-                            ),
-                          ),
-                          child: IconButton(
-                            onPressed: () {
-                              _scaffoldKey.currentState?.openDrawer();
-                            },
-                            icon: Icon(Icons.person_2, size: 40),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(height: 30),
-                  GridView.count(
-                    crossAxisCount: 2,
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    mainAxisSpacing: 25,
-                    crossAxisSpacing: 25,
-                    padding: EdgeInsets.all(12),
-                    children: [
-                      buildNavigationCard(
-                        icon: Icons.school,
-                        text: "Course Structure",
-                        colour: Colors.blue,
-                        onTap: () {},
-                      ),
-                      buildNavigationCard(
-                        icon: Icons.text_snippet,
-                        text: "Notes",
-                        colour: Colors.green,
-                        onTap: () {},
-                      ),
-                      buildNavigationCard(
-                        icon: Icons.people,
-                        text: "Connect",
-                        colour: Colors.purpleAccent,
-                        onTap: () {},
-                      ),
-                      buildNavigationCard(
-                        icon: Icons.checklist_rtl,
-                        text: "Attendance",
-                        colour: Colors.deepOrange,
-                        onTap: () {},
-                      ),
+                      const SizedBox(height: 25),
+                      if (user['isAdmin'] == true)
+                        adminDashboard(context, size),
                     ],
                   ),
-                  const SizedBox(height: 25),
-                  if (currentUser?['data']?['user']?['isAdmin'] == true)
-                    adminDashboard(context, size),
-                ],
-              ),
-            ),
+                ),
+              );
+            },
           ),
         ),
       ),
     );
   }
 
-  Drawer buildAppDrawer(BuildContext context, bool isDarkMode) {
+  Drawer buildAppDrawer(BuildContext context, bool isDarkMode, Map<String, dynamic> user) {
     return Drawer(
       child: ListView(
         padding: EdgeInsets.zero,
@@ -179,7 +172,7 @@ class _HomeScreenState extends State<HomeScreen> {
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 Text(
-                  currentUser?['data']['user']['name'] ?? 'User',
+                  user['name'] ?? 'User',
                   style: TextStyle(
                     fontSize: 22,
                     fontWeight: FontWeight.bold,
@@ -187,7 +180,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ),
                 Text(
-                  currentUser?['data']['user']['email'] ?? 'user@email.com',
+                  user['email'] ?? 'user@email.com',
                   style: TextStyle(
                     fontSize: 14,
                     color: isDarkMode ? Colors.white70 : Colors.black54,
@@ -201,16 +194,10 @@ class _HomeScreenState extends State<HomeScreen> {
             title: const Text('View Profile'),
             onTap: () {
               Navigator.pop(context);
-              Future.microtask(() {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (_) => const ViewProfileScreen()),
-                ).then((wasProfileUpdated) {
-                  if (wasProfileUpdated == true) {
-                    loadUserData();
-                  }
-                });
-              });
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => const ViewProfileScreen()),
+              );
             },
           ),
           ListTile(
@@ -241,19 +228,20 @@ class _HomeScreenState extends State<HomeScreen> {
     required Color colour,
     required VoidCallback onTap,
   }) {
-    return Material(
-      borderRadius: BorderRadius.circular(30),
-      child: InkWell(
-        onTap: onTap,
+    // This helper method can be moved outside the class or kept here.
+    // Since HomeScreen is now a StatelessWidget, context needs to be passed in if you move it.
+    return Builder(builder: (context) {
+      return Material(
         borderRadius: BorderRadius.circular(30),
-        child: Container(
-          decoration: BoxDecoration(
-            color: Theme.of(context).cardColor,
-            borderRadius: BorderRadius.circular(30),
-            boxShadow:
-                Theme.of(context).brightness == Brightness.light
-                    ? [
-                      // Apply a shadow only in light mode
+        child: InkWell(
+          onTap: onTap,
+          borderRadius: BorderRadius.circular(30),
+          child: Container(
+            decoration: BoxDecoration(
+              color: Theme.of(context).cardColor,
+              borderRadius: BorderRadius.circular(30),
+              boxShadow: Theme.of(context).brightness == Brightness.light
+                  ? [
                       BoxShadow(
                         color: Colors.black.withOpacity(0.1),
                         blurRadius: 4,
@@ -261,25 +249,26 @@ class _HomeScreenState extends State<HomeScreen> {
                         offset: const Offset(0, 2),
                       ),
                     ]
-                    : null,
-          ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(icon, color: colour, size: 50),
-              SizedBox(height: 10),
-              Text(
-                text,
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-              ),
-            ],
+                  : null,
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(icon, color: colour, size: 50),
+                const SizedBox(height: 10),
+                Text(
+                  text,
+                  style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                ),
+              ],
+            ),
           ),
         ),
-      ),
-    );
+      );
+    });
   }
 
-  Widget adminDashboard(context, size) {
+  Widget adminDashboard(BuildContext context, Size size) {
     return InkWell(
       onTap: () {},
       borderRadius: BorderRadius.circular(30),
@@ -287,22 +276,20 @@ class _HomeScreenState extends State<HomeScreen> {
         height: size.height * 0.07,
         width: size.width * 0.7,
         decoration: BoxDecoration(
-          color:
-              (Theme.of(context).brightness == Brightness.light)
-                  ? Colors.white
-                  : Colors.transparent,
+          color: (Theme.of(context).brightness == Brightness.light)
+              ? Colors.white
+              : Colors.transparent,
           borderRadius: BorderRadius.circular(30),
           border: Border.all(
-            color:
-                (Theme.of(context).brightness == Brightness.dark)
-                    ? Colors.white
-                    : Colors.black,
+            color: (Theme.of(context).brightness == Brightness.dark)
+                ? Colors.white
+                : Colors.black,
             width: 3,
           ),
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: [
+          children: const [
             Icon(Icons.shield_outlined, size: 40),
             Text(
               "Admin Dashboard",

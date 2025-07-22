@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:frontend/blocs/auth/auth_bloc.dart';
+import 'package:frontend/blocs/auth/auth_event.dart';
 import 'package:frontend/blocs/login/login_bloc.dart';
 import 'package:frontend/blocs/register/register_bloc.dart';
 import 'package:frontend/blocs/theme/theme_bloc.dart';
@@ -19,14 +20,15 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final AuthBloc authBloc = AuthBloc()..add(AppStarted());
     return MultiBlocProvider(
       providers: [
+        BlocProvider.value(value: authBloc),
+        BlocProvider(create: (context) => ViewProfileBloc(authBloc: authBloc)),
         BlocProvider(create: (_) => LoginBloc()),
-        BlocProvider(create: (_) => AuthBloc()),
         BlocProvider(create: (_) => VerifyEmailBloc()),
         BlocProvider(create: (_) => RegisterBloc()),
         BlocProvider(create: (_) => ThemeBloc()),
-        BlocProvider(create: (_) => ViewProfileBloc()),
       ],
       child: BlocBuilder<ThemeBloc, ThemeState>(
         builder: (context, state) {
