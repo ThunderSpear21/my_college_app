@@ -61,8 +61,12 @@ class HomeScreen extends StatelessWidget {
                             begin: Alignment.topLeft,
                             end: Alignment.bottomRight,
                             colors: [
-                              isDarkMode ? Colors.blue.shade500 : Colors.lightBlue.shade200,
-                              isDarkMode ? Colors.purple : Colors.purple.shade200,
+                              isDarkMode
+                                  ? Colors.blue.shade500
+                                  : Colors.lightBlue.shade200,
+                              isDarkMode
+                                  ? Colors.purple
+                                  : Colors.purple.shade200,
                             ],
                           ),
                           borderRadius: BorderRadius.circular(25),
@@ -81,7 +85,8 @@ class HomeScreen extends StatelessWidget {
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(40),
                                 border: Border.all(
-                                  color: isDarkMode ? Colors.white : Colors.black,
+                                  color:
+                                      isDarkMode ? Colors.white : Colors.black,
                                   width: 3,
                                 ),
                               ),
@@ -144,7 +149,11 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-  Drawer buildAppDrawer(BuildContext context, bool isDarkMode, Map<String, dynamic> user) {
+  Drawer buildAppDrawer(
+    BuildContext context,
+    bool isDarkMode,
+    Map<String, dynamic> user,
+  ) {
     return Drawer(
       child: ListView(
         padding: EdgeInsets.zero,
@@ -221,42 +230,49 @@ class HomeScreen extends StatelessWidget {
     required Color colour,
     required VoidCallback onTap,
   }) {
-    return Builder(builder: (context) {
-      return Material(
-        borderRadius: BorderRadius.circular(30),
-        child: InkWell(
-          onTap: onTap,
+    return Builder(
+      builder: (context) {
+        return Material(
           borderRadius: BorderRadius.circular(30),
-          child: Container(
-            decoration: BoxDecoration(
-              color: Theme.of(context).cardColor,
-              borderRadius: BorderRadius.circular(30),
-              boxShadow: Theme.of(context).brightness == Brightness.light
-                  ? [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.1),
-                        blurRadius: 4,
-                        spreadRadius: 1,
-                        offset: const Offset(0, 2),
-                      ),
-                    ]
-                  : null,
-            ),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(icon, color: colour, size: 50),
-                const SizedBox(height: 10),
-                Text(
-                  text,
-                  style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                ),
-              ],
+          child: InkWell(
+            onTap: onTap,
+            borderRadius: BorderRadius.circular(30),
+            child: Container(
+              decoration: BoxDecoration(
+                color: Theme.of(context).cardColor,
+                borderRadius: BorderRadius.circular(30),
+                boxShadow:
+                    Theme.of(context).brightness == Brightness.light
+                        ? [
+                          BoxShadow(
+                            // ignore: deprecated_member_use
+                            color: Colors.black.withOpacity(0.1),
+                            blurRadius: 4,
+                            spreadRadius: 1,
+                            offset: const Offset(0, 2),
+                          ),
+                        ]
+                        : null,
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(icon, color: colour, size: 50),
+                  const SizedBox(height: 10),
+                  Text(
+                    text,
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
-        ),
-      );
-    });
+        );
+      },
+    );
   }
 
   Widget adminDashboard(BuildContext context, Size size) {
@@ -267,14 +283,16 @@ class HomeScreen extends StatelessWidget {
         height: size.height * 0.07,
         width: size.width * 0.7,
         decoration: BoxDecoration(
-          color: (Theme.of(context).brightness == Brightness.light)
-              ? Colors.white
-              : Colors.transparent,
+          color:
+              (Theme.of(context).brightness == Brightness.light)
+                  ? Colors.white
+                  : Colors.transparent,
           borderRadius: BorderRadius.circular(30),
           border: Border.all(
-            color: (Theme.of(context).brightness == Brightness.dark)
-                ? Colors.white
-                : Colors.black,
+            color:
+                (Theme.of(context).brightness == Brightness.dark)
+                    ? Colors.white
+                    : Colors.black,
             width: 3,
           ),
         ),

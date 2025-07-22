@@ -8,7 +8,7 @@ import 'package:frontend/blocs/theme/theme_bloc.dart';
 import 'package:frontend/blocs/theme/theme_state.dart';
 import 'package:frontend/blocs/verify_email/verify_email_bloc.dart';
 import 'package:frontend/blocs/view_profile/view_profile_bloc.dart';
-import 'package:frontend/screens/title_screen.dart';
+import 'package:frontend/screens/auth_wrapper.dart';
 import 'package:frontend/theme/app_theme.dart';
 
 void main() {
@@ -38,7 +38,7 @@ class MyApp extends StatelessWidget {
             theme: AppTheme.lightTheme,
             darkTheme: AppTheme.darkTheme,
             themeMode: state.themeMode,
-            home: const TitleScreen(),
+            home: const AuthWrapper(),
           );
         },
       ),

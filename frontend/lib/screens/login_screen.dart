@@ -28,7 +28,6 @@ class _LoginScreenState extends State<LoginScreen> {
       );
       return;
     }
-
     context.read<LoginBloc>().add(
       LoginSubmitted(email: email, password: password),
     );
@@ -44,7 +43,6 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   void _forgotPassword() {
-    // TODO: Implement forgot password logic
   }
 
   @override
@@ -62,17 +60,6 @@ class _LoginScreenState extends State<LoginScreen> {
                   context,
                 ).showSnackBar(SnackBar(content: Text(state.message)));
               } else if (state is LoginSuccess) {
-                // Future.microtask(() {
-                //   FocusScope.of(context).unfocus();
-                //   _showLoadingOverlay(context);
-                //   Future.delayed(const Duration(seconds: 1), () {
-                //     Navigator.pushAndRemoveUntil(
-                //       context,
-                //       MaterialPageRoute(builder: (_) => const HomeScreen()),
-                //       (route) => false,
-                //     );
-                //   });
-                // });
                 context.read<AuthBloc>().add(LoggedIn());
               }
             },
@@ -145,7 +132,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   BlocBuilder<LoginBloc, LoginState>(
                     builder: (context, state) {
                       return ElevatedButton(
-                        onPressed: _login,
+                        onPressed: state is LoginLoading ? null : _login,
                         style: ElevatedButton.styleFrom(
                           padding: const EdgeInsets.symmetric(
                             vertical: 12,

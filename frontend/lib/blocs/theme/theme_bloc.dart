@@ -4,7 +4,7 @@ import 'package:frontend/blocs/theme/theme_event.dart';
 import 'package:frontend/blocs/theme/theme_state.dart';
 
 class ThemeBloc extends Bloc<ThemeEvent, ThemeState> {
-  ThemeBloc() : super(const ThemeState(ThemeMode.light)) {
+  ThemeBloc() : super(const ThemeState(ThemeMode.dark)) {
     on<ThemeToggled>((event, emit) {
       // When the toggle event is received, switch the state
       if (state.themeMode == ThemeMode.light) {
