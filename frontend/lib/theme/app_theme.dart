@@ -17,6 +17,7 @@ class AppTheme {
       displayMedium: const TextStyle(color: AppColors.lightText),
       labelMedium: const TextStyle(color: AppColors.lightText),
       headlineMedium: const TextStyle(color: AppColors.lightText),
+      titleLarge: const TextStyle(color: AppColors.lightText),
     ),
     inputDecorationTheme: InputDecorationTheme(
       hintStyle: GoogleFonts.concertOne(
@@ -59,6 +60,7 @@ class AppTheme {
       displayMedium: const TextStyle(color: AppColors.darkText),
       labelMedium: const TextStyle(color: AppColors.darkText),
       headlineMedium: const TextStyle(color: AppColors.darkText),
+      titleLarge: const TextStyle(color: AppColors.darkText),
     ),
     inputDecorationTheme: InputDecorationTheme(
       hintStyle: GoogleFonts.concertOne(

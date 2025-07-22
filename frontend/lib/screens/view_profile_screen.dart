@@ -12,7 +12,6 @@ class ViewProfileScreen extends StatefulWidget {
 }
 
 class _ViewProfileScreenState extends State<ViewProfileScreen> {
-  // Local UI state for edit mode and text controller
   bool _isEditing = false;
   late final TextEditingController _nameController;
   final _formKey = GlobalKey<FormState>();
@@ -21,7 +20,6 @@ class _ViewProfileScreenState extends State<ViewProfileScreen> {
   void initState() {
     super.initState();
     _nameController = TextEditingController();
-    // Dispatch the event to load data when the screen is initialized.
     context.read<ViewProfileBloc>().add(ProfileLoadRequested());
   }
 
@@ -40,20 +38,17 @@ class _ViewProfileScreenState extends State<ViewProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // No PopScope is needed anymore as we don't need to pass a result back.
     return Scaffold(
       appBar: AppBar(
-        // A standard AppBar is sufficient. Flutter adds the back button automatically.
         title: const Text('My Profile'),
         centerTitle: true,
         backgroundColor: Colors.transparent,
         elevation: 0,
       ),
       body: BlocListener<ViewProfileBloc, ViewProfileState>(
-        // Use listenWhen for precise and reliable side-effects.
         listenWhen: (previous, current) {
-          // This listener will ONLY run when an update succeeds or any failure occurs.
-          final bool updateSuccess = previous.status == ProfileStatus.updating &&
+          final bool updateSuccess =
+              previous.status == ProfileStatus.updating &&
               current.status == ProfileStatus.success;
           final bool anyFailure = current.status == ProfileStatus.failure;
           return updateSuccess || anyFailure;
@@ -64,13 +59,13 @@ class _ViewProfileScreenState extends State<ViewProfileScreen> {
               ..hideCurrentSnackBar()
               ..showSnackBar(
                 SnackBar(
-                  content:
-                      Text(state.errorMessage ?? 'An unknown error occurred.'),
+                  content: Text(
+                    state.errorMessage ?? 'An unknown error occurred.',
+                  ),
                   backgroundColor: Colors.red,
                 ),
               );
           }
-          // This now only runs after a successful update, not on the initial load.
           if (state.status == ProfileStatus.success) {
             ScaffoldMessenger.of(context)
               ..hideCurrentSnackBar()
@@ -84,10 +79,8 @@ class _ViewProfileScreenState extends State<ViewProfileScreen> {
         },
         child: BlocBuilder<ViewProfileBloc, ViewProfileState>(
           builder: (context, state) {
-            // Sync the controller when the user data is available.
             if (state.user != null &&
-                _nameController.text != state.user!['name'] &&
-                !_isEditing) {
+                _nameController.text != state.user!['name']) {
               _nameController.text = state.user!['name'];
             }
 
@@ -100,129 +93,37 @@ class _ViewProfileScreenState extends State<ViewProfileScreen> {
               return GestureDetector(
                 onTap: () => FocusScope.of(context).unfocus(),
                 child: SingleChildScrollView(
-                  padding: const EdgeInsets.all(24.0),
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
                   child: Form(
                     key: _formKey,
                     child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        // Avatar
-                        CircleAvatar(
-                          radius: 50,
-                          backgroundColor: Theme.of(context).primaryColor,
+                        const SizedBox(height: 16),
+                        _buildProfileHeaderCard(context, state),
+                        const SizedBox(height: 24),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 8.0),
                           child: Text(
-                            state.user?['name']?[0].toUpperCase() ?? 'U',
-                            style: const TextStyle(
-                                fontSize: 40, color: Colors.white),
+                            "Secondary Details",
+                            style: Theme.of(context).textTheme.titleLarge,
                           ),
                         ),
-                        const SizedBox(height: 40),
-
-                        // Name Field
-                        TextFormField(
-                          controller: _nameController,
-                          readOnly: !_isEditing,
-                          decoration: InputDecoration(
-                            labelText: 'Full Name',
-                            prefixIcon: const Icon(Icons.person_outline),
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            suffixIcon: IconButton(
-                              icon: Icon(
-                                _isEditing ? Icons.close : Icons.edit,
-                                size: 20,
-                              ),
-                              onPressed: () {
-                                setState(() {
-                                  _isEditing = !_isEditing;
-                                  if (!_isEditing) {
-                                    _nameController.text =
-                                        state.user!['name'];
-                                  }
-                                });
-                              },
-                            ),
-                          ),
-                          validator: (value) {
-                            if (value == null || value.trim().isEmpty) {
-                              return 'Name cannot be empty';
-                            }
-                            return null;
-                          },
-                        ),
                         const SizedBox(height: 16),
-
-                        // Other read-only fields
-                        _buildReadOnlyTextField(
-                          label: 'Email',
-                          value: state.user?['email'] ?? 'N/A',
-                          icon: Icons.email_outlined,
-                        ),
-                        const SizedBox(height: 16),
-                        _buildReadOnlyTextField(
+                        _buildInfoRow(
+                          icon: Icons.school_outlined,
                           label: 'Year of Admission',
                           value:
                               state.user?['yearOfAdmission']?.toString() ??
-                                  'N/A',
-                          icon: Icons.calendar_today_outlined,
+                              'N/A',
                         ),
-                        const SizedBox(height: 16),
-                        _buildReadOnlyTextField(
+                        const SizedBox(height: 12),
+                        _buildInfoRow(
+                          icon: Icons.admin_panel_settings_outlined,
                           label: 'Role',
                           value: _getUserRole(state.user),
-                          icon: Icons.verified_user_outlined,
                         ),
-                        const SizedBox(height: 32),
-                        if (_isEditing)
-                          SizedBox(
-                            width: double.infinity,
-                            child: ElevatedButton(
-                              onPressed:
-                                  state.status == ProfileStatus.updating
-                                      ? null
-                                      : () {
-                                          if (_formKey.currentState!
-                                              .validate()) {
-                                            // No longer need to set _didUpdate
-                                            context
-                                                .read<ViewProfileBloc>()
-                                                .add(
-                                                  ProfileUpdateSubmitted(
-                                                    newName: _nameController
-                                                        .text
-                                                        .trim(),
-                                                  ),
-                                                );
-                                            setState(() {
-                                              _isEditing = false;
-                                            });
-                                          }
-                                        },
-                              style: ElevatedButton.styleFrom(
-                                padding: const EdgeInsets.symmetric(
-                                  vertical: 16,
-                                ),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(12),
-                                ),
-                              ),
-                              child:
-                                  state.status == ProfileStatus.updating
-                                      ? const SizedBox(
-                                          height: 20,
-                                          width: 20,
-                                          child: CircularProgressIndicator(
-                                            strokeWidth: 2,
-                                            color: Colors.white,
-                                          ),
-                                        )
-                                      : const Text(
-                                          'Update Profile',
-                                          style: TextStyle(fontSize: 16),
-                                        ),
-                            ),
-                          ),
+                        const SizedBox(height: 40),
                       ],
                     ),
                   ),
@@ -239,21 +140,138 @@ class _ViewProfileScreenState extends State<ViewProfileScreen> {
     );
   }
 
-  Widget _buildReadOnlyTextField({
+  Widget _buildProfileHeaderCard(BuildContext context, ViewProfileState state) {
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(16),
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            (Theme.of(context).brightness == Brightness.dark)
+                ? Colors.blue.shade500
+                : Colors.lightBlue.shade200,
+            (Theme.of(context).brightness == Brightness.dark)
+                ? Colors.purple
+                : Colors.purple.shade200,
+          ],
+        ),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          children: [
+            const SizedBox(height: 20),
+            CircleAvatar(
+              radius: 50,
+              backgroundColor:
+                  (Theme.of(context).brightness == Brightness.dark)
+                      ? Colors.blue.shade200
+                      : Colors.indigo.shade600,
+              child: Text(
+                state.user?['name']?[0].toUpperCase() ?? 'U',
+                style: TextStyle(
+                  fontSize: 42,
+                  fontWeight: FontWeight.bold,
+                  color:
+                      (Theme.of(context).brightness == Brightness.light)
+                          ? Colors.white
+                          : Colors.black,
+                ),
+              ),
+            ),
+            const SizedBox(height: 30),
+            Row(
+              children: [
+                const SizedBox(height: 20),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      _isEditing
+                          ? TextFormField(
+                            controller: _nameController,
+                            style: Theme.of(context).textTheme.titleLarge,
+                            decoration: InputDecoration(
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              labelText: 'Full Name',
+                              isDense: true,
+                            ),
+                            validator: (value) {
+                              if (value == null || value.trim().isEmpty) {
+                                return 'Name cannot be empty';
+                              }
+                              return null;
+                            },
+                          )
+                          : Text(
+                            state.user?['name'] ?? 'User Name',
+                            style: Theme.of(context).textTheme.titleLarge,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                      const SizedBox(height: 4),
+                      Text(
+                        state.user?['email'] ?? 'email@example.com',
+                        style: Theme.of(context).textTheme.labelMedium,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ],
+                  ),
+                ),
+                TextButton(
+                  onPressed: () {
+                    if (_isEditing) {
+                      // Save action
+                      if (_formKey.currentState!.validate()) {
+                        context.read<ViewProfileBloc>().add(
+                          ProfileUpdateSubmitted(
+                            newName: _nameController.text.trim(),
+                          ),
+                        );
+                        setState(() => _isEditing = false);
+                      }
+                    } else {
+                      // Edit action
+                      setState(() => _isEditing = true);
+                    }
+                  },
+                  child:
+                      state.status == ProfileStatus.updating
+                          ? const SizedBox(
+                            height: 20,
+                            width: 20,
+                            child: CircularProgressIndicator(strokeWidth: 2),
+                          )
+                          : Text(_isEditing ? 'SAVE' : 'EDIT', style: TextStyle(color: Colors.white),),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildInfoRow({
+    required IconData icon,
     required String label,
     required String value,
-    required IconData icon,
   }) {
-    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
-    return TextFormField(
-      initialValue: value,
-      readOnly: true,
-      decoration: InputDecoration(
-        labelText: label,
-        prefixIcon: Icon(icon),
-        border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
-        filled: true,
-        fillColor: isDarkMode ? Colors.grey.shade800 : Colors.grey.shade200,
+    return Card(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      elevation: 1,
+      child: ListTile(
+        leading: Icon(icon, color: Theme.of(context).primaryColor),
+        title: Text(label, style: const TextStyle(fontWeight: FontWeight.w500)),
+        trailing: Text(
+          value,
+          style: TextStyle(
+            fontSize: 16,
+            color: Theme.of(context).textTheme.bodySmall?.color,
+          ),
+        ),
       ),
     );
   }

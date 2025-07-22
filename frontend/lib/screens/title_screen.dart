@@ -1,59 +1,37 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../blocs/auth/auth_bloc.dart';
-import '../../blocs/auth/auth_event.dart';
 import '../../blocs/auth/auth_state.dart';
 import 'home_screen.dart';
 import 'login_screen.dart';
 
-class TitleScreen extends StatefulWidget {
+class TitleScreen extends StatelessWidget {
   const TitleScreen({super.key});
 
   @override
-  State<TitleScreen> createState() => _TitleScreenState();
-}
-
-class _TitleScreenState extends State<TitleScreen> {
-  @override
-  void initState() {
-    super.initState();
-
-    // Trigger auth check after delay
-    Future.delayed(const Duration(seconds: 3), () {
-      if (mounted) {
-        context.read<AuthBloc>().add(AppStarted());
-      }
-    });
-  }
-
-  @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () => FocusScope.of(context).unfocus(),
-      child: Scaffold(
-        body: BlocListener<AuthBloc, AuthState>(
-          listener: (context, state) {
-            if (state is Authenticated) {
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(builder: (_) => const HomeScreen()),
-              );
-            } else if (state is Unauthenticated) {
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(builder: (_) => const LoginScreen()),
-              );
+    return Scaffold(
+      body: BlocListener<AuthBloc, AuthState>(
+        listener: (context, state) {
+          if (state is Authenticated) {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (_) => const HomeScreen()),
+            );
+          } else if (state is Unauthenticated) {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (_) => const LoginScreen()),
+            );
+          }
+        },
+        child: BlocBuilder<AuthBloc, AuthState>(
+          builder: (context, state) {
+            if (state is AuthLoading || state is AuthInitial) {
+              return const _TitleScreenContent();
             }
+            return const SizedBox.shrink();
           },
-          child: BlocBuilder<AuthBloc, AuthState>(
-            builder: (context, state) {
-              if (state is AuthLoading || state is AuthInitial) {
-                return const _TitleScreenContent();
-              }
-
-              return const SizedBox(); // fallback UI during navigation
-            },
-          ),
         ),
       ),
     );

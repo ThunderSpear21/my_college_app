@@ -8,7 +8,6 @@ import 'package:frontend/blocs/theme/theme_event.dart';
 import 'package:frontend/screens/login_screen.dart';
 import 'package:frontend/screens/view_profile_screen.dart';
 
-// HomeScreen is now a StatelessWidget because it doesn't manage its own state.
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
@@ -20,13 +19,11 @@ class HomeScreen extends StatelessWidget {
 
     return Scaffold(
       key: scaffoldKey,
-      // Use a BlocBuilder to get the user data for the drawer.
       drawer: BlocBuilder<AuthBloc, AuthState>(
         builder: (context, state) {
           if (state is Authenticated) {
             return buildAppDrawer(context, isDarkMode, state.user);
           }
-          // Return an empty drawer if the state is not Authenticated.
           return const Drawer();
         },
       ),
@@ -41,15 +38,11 @@ class HomeScreen extends StatelessWidget {
               );
             }
           },
-          // Use BlocBuilder for the main body to react to state changes.
           child: BlocBuilder<AuthBloc, AuthState>(
             builder: (context, state) {
-              // Show a loading indicator for initial, loading, or unauthenticated states.
               if (state is! Authenticated) {
                 return const Center(child: CircularProgressIndicator());
               }
-
-              // When the state is Authenticated, build the main UI with user data.
               final user = state.user;
               return Padding(
                 padding: const EdgeInsets.all(12.0),
@@ -228,8 +221,6 @@ class HomeScreen extends StatelessWidget {
     required Color colour,
     required VoidCallback onTap,
   }) {
-    // This helper method can be moved outside the class or kept here.
-    // Since HomeScreen is now a StatelessWidget, context needs to be passed in if you move it.
     return Builder(builder: (context) {
       return Material(
         borderRadius: BorderRadius.circular(30),

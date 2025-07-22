@@ -55,6 +55,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
   // New handler to update the state with fresh user data from the profile screen.
   void _onUserUpdated(UserUpdated event, Emitter<AuthState> emit) {
-    emit(Authenticated(event.updatedUser));
+    if (state is Authenticated) {
+      emit(Authenticated(event.updatedUser));
+    }
   }
 }
