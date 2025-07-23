@@ -27,6 +27,7 @@ const uploadOnCloudinary = async (filePath) => {
     }
     const res = await cloudinary.uploader.upload(filePath, {
       resource_type: resourceType,
+      type: "upload",
     });
 
     console.log("File Uploadaed to Cloudinary Successfully", res);

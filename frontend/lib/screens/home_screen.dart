@@ -6,6 +6,7 @@ import 'package:frontend/blocs/auth/auth_state.dart';
 import 'package:frontend/blocs/theme/theme_bloc.dart';
 import 'package:frontend/blocs/theme/theme_event.dart';
 import 'package:frontend/screens/login_screen.dart';
+import 'package:frontend/screens/view_course_screen.dart';
 import 'package:frontend/screens/view_profile_screen.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -113,7 +114,14 @@ class HomeScreen extends StatelessWidget {
                             icon: Icons.school,
                             text: "Course Structure",
                             colour: Colors.blue,
-                            onTap: () {},
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (_) => const ViewCourseScreen(),
+                                ),
+                              );
+                            },
                           ),
                           buildNavigationCard(
                             icon: Icons.text_snippet,
