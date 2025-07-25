@@ -7,6 +7,7 @@ import 'package:frontend/blocs/theme/theme_bloc.dart';
 import 'package:frontend/blocs/theme/theme_event.dart';
 import 'package:frontend/screens/login_screen.dart';
 import 'package:frontend/screens/view_course_screen.dart';
+import 'package:frontend/screens/view_notes_screen.dart';
 import 'package:frontend/screens/view_profile_screen.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -127,7 +128,14 @@ class HomeScreen extends StatelessWidget {
                             icon: Icons.text_snippet,
                             text: "Notes",
                             colour: Colors.green,
-                            onTap: () {},
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (_) => const ViewNotesScreen(),
+                                ),
+                              );
+                            },
                           ),
                           buildNavigationCard(
                             icon: Icons.people,

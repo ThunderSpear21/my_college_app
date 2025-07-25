@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import '../models/course_model.dart';
 import 'session_manager.dart';
@@ -23,18 +22,12 @@ class CourseService {
       );
       if (response.statusCode == 200) {
         final Map<String, dynamic> responseBody = json.decode(response.body);
-        debugPrint(responseBody.toString());
         final List<dynamic> coursesJson = responseBody['data'];
         return coursesJson.map((json) => Course.fromJson(json)).toList();
       } else {
-        debugPrint(
-          'Failed to load courses. Status code: ${response.statusCode}',
-        );
-        debugPrint('Response body: ${response.body}');
         throw Exception('Failed to load courses for semester $semester');
       }
     } catch (e) {
-      debugPrint('Error fetching courses: $e');
       throw Exception('An error occurred while fetching courses.');
     }
   }

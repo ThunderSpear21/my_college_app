@@ -4,6 +4,7 @@ import 'package:frontend/blocs/auth/auth_bloc.dart';
 import 'package:frontend/blocs/auth/auth_event.dart';
 import 'package:frontend/blocs/course/course_bloc.dart';
 import 'package:frontend/blocs/login/login_bloc.dart';
+import 'package:frontend/blocs/notes/notes_bloc.dart';
 import 'package:frontend/blocs/register/register_bloc.dart';
 import 'package:frontend/blocs/theme/theme_bloc.dart';
 import 'package:frontend/blocs/theme/theme_state.dart';
@@ -30,7 +31,8 @@ class MyApp extends StatelessWidget {
         BlocProvider(create: (_) => VerifyEmailBloc()),
         BlocProvider(create: (_) => RegisterBloc()),
         BlocProvider(create: (_) => ThemeBloc()),
-        BlocProvider(create: (_) => CourseBloc())
+        BlocProvider(create: (_) => CourseBloc()),
+        BlocProvider(create: (_) => NoteBloc()),
       ],
       child: BlocBuilder<ThemeBloc, ThemeState>(
         builder: (context, state) {
