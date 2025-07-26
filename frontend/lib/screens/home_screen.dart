@@ -5,6 +5,7 @@ import 'package:frontend/blocs/auth/auth_event.dart';
 import 'package:frontend/blocs/auth/auth_state.dart';
 import 'package:frontend/blocs/theme/theme_bloc.dart';
 import 'package:frontend/blocs/theme/theme_event.dart';
+import 'package:frontend/screens/connect_screen.dart';
 import 'package:frontend/screens/login_screen.dart';
 import 'package:frontend/screens/view_course_screen.dart';
 import 'package:frontend/screens/view_notes_screen.dart';
@@ -141,7 +142,12 @@ class HomeScreen extends StatelessWidget {
                             icon: Icons.people,
                             text: "Connect",
                             colour: Colors.purpleAccent,
-                            onTap: () {},
+                            onTap: () {Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (_) => const ConnectScreen(),
+                                ),
+                              );},
                           ),
                           buildNavigationCard(
                             icon: Icons.checklist_rtl,

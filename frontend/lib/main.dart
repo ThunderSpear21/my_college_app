@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:frontend/blocs/auth/auth_bloc.dart';
 import 'package:frontend/blocs/auth/auth_event.dart';
+import 'package:frontend/blocs/connect/connect_bloc.dart';
 import 'package:frontend/blocs/course/course_bloc.dart';
 import 'package:frontend/blocs/login/login_bloc.dart';
 import 'package:frontend/blocs/notes/notes_bloc.dart';
@@ -33,6 +34,7 @@ class MyApp extends StatelessWidget {
         BlocProvider(create: (_) => ThemeBloc()),
         BlocProvider(create: (_) => CourseBloc()),
         BlocProvider(create: (_) => NoteBloc()),
+        BlocProvider(create: (_) => ConnectBloc()),
       ],
       child: BlocBuilder<ThemeBloc, ThemeState>(
         builder: (context, state) {
