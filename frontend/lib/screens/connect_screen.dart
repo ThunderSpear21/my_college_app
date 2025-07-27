@@ -43,15 +43,9 @@ class _ConnectScreenState extends State<ConnectScreen> {
               color: Theme.of(context).primaryColor.withValues(alpha: 0.1),
             ),
             padding: EdgeInsets.all(12),
-            tabs: [
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text("My Mentor", style: TextStyle(fontSize: 20)),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text("My Mentees", style: TextStyle(fontSize: 20)),
-              ),
+            tabs: const [
+              Tab(icon: Icon(Icons.person_add_alt_1), text: "My Mentor"),
+              Tab(icon: Icon(Icons.groups_2), text: "My Mentees"),
             ],
           ),
         ),
@@ -101,9 +95,18 @@ class _MyMentorTab extends StatelessWidget {
         if (state.status == ConnectStatus.success ||
             state.status == ConnectStatus.sendingRequest) {
           if (state.hasMentor == true && state.myMentor != null) {
-            return Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: _MentorCard(mentor: state.myMentor!, isConnected: true),
+            return ListView(
+              shrinkWrap: true,
+              physics: NeverScrollableScrollPhysics(),
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: _MentorCard(
+                    mentor: state.myMentor!,
+                    isConnected: true,
+                  ),
+                ),
+              ],
             );
           } else {
             if (state.availableMentors.isEmpty) {
@@ -182,8 +185,17 @@ class _MentorCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      elevation: 2,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      elevation: Theme.of(context).brightness == Brightness.dark ? 4 : 2,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12),
+        side: BorderSide(
+          color:
+              Theme.of(context).brightness == Brightness.dark
+                  ? Colors.grey.shade800
+                  : Colors.grey.shade300,
+          width: 1.0,
+        ),
+      ),
       margin: const EdgeInsets.only(bottom: 16),
       child: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -232,19 +244,26 @@ class _MenteeCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      elevation: 2,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      margin: const EdgeInsets.only(bottom: 16),
+      elevation: Theme.of(context).brightness == Brightness.dark ? 4 : 2,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12),
+        side: BorderSide(
+          color:
+              Theme.of(context).brightness == Brightness.dark
+                  ? Colors.grey.shade800
+                  : Colors.grey.shade300,
+          width: 1.0,
+        ),
+      ),
       child: ListTile(
+        dense: false,
         title: Text(
           mentee.name,
           style: const TextStyle(fontWeight: FontWeight.bold),
         ),
         subtitle: Text(mentee.email),
         trailing: const Icon(Icons.chevron_right),
-        onTap: () {
-          // TODO: Navigate to chat screen with mentee.id
-        },
+        onTap: () {},
       ),
     );
   }
