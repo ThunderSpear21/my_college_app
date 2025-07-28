@@ -197,7 +197,7 @@ const deleteNotes = asyncHandler(async (req, res) => {
 
   const notes = await Note.findOne({ _id: notesId });
   if (!notes) throw new apiError(404, "Invalid notesId");
-  //console.log(course);
+
   await deleteFromCloudinary(notes.url);
 
   await Note.findOneAndDelete({ _id: notesId });

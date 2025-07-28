@@ -30,11 +30,10 @@ const uploadOnCloudinary = async (filePath) => {
       type: "upload",
     });
 
-    console.log("File Uploadaed to Cloudinary Successfully", res);
     if (fs.existsSync(filePath)) {
       fs.unlinkSync(filePath);
     }
-    // console.log(res);
+
     return res;
   } catch (error) {
     if (fs.existsSync(filePath)) {
@@ -55,7 +54,6 @@ const deleteFromCloudinary = async (cloudinaryUrl) => {
     const result = await cloudinary.uploader.destroy(publicId, {
       resource_type: resourceType,
     });
-    console.log("Deleted from Cloudinary:", result);
   } catch (error) {
     console.error("Error deleting from Cloudinary:", error);
     throw error;
