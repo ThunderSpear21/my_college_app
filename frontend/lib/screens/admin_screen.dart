@@ -340,7 +340,10 @@ Widget _buildManagementButton({
   required VoidCallback onPressed,
 }) {
   return Card(
-    shape: RoundedRectangleBorder( borderRadius: BorderRadiusGeometry.circular(16),side: BorderSide(color: Colors.white24)),
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadiusGeometry.circular(16),
+      side: BorderSide(color: Colors.white24),
+    ),
     child: ListTile(
       title: Text(title),
       trailing: Icon(icon, size: 16),
@@ -388,7 +391,9 @@ Widget _buildUserCard(
     margin: const EdgeInsets.symmetric(vertical: 6),
     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
     color:
-        isActive ? Colors.green.withOpacity(0.1) : Colors.red.withOpacity(0.1),
+        isActive
+            ? Colors.green.withValues(alpha: 0.1)
+            : Colors.red.withValues(alpha: 0.1),
     elevation: 0,
     child: Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 12.0),
@@ -514,7 +519,7 @@ class _UploadCourseFormState extends State<_UploadCourseForm> {
               else
                 Card(
                   elevation: 0,
-                  color: Theme.of(context).primaryColor.withOpacity(0.1),
+                  color: Theme.of(context).primaryColor.withValues(alpha: 0.1),
                   child: ListTile(
                     leading: const Icon(Icons.insert_drive_file),
                     title: Text(
@@ -778,12 +783,14 @@ class _UploadNoteFormState extends State<_UploadNoteForm> {
         _coursesForSemester = courses;
       });
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Failed to fetch courses: $e'),
-          backgroundColor: Colors.red,
-        ),
-      );
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Failed to fetch courses: $e'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
     } finally {
       setState(() {
         _isLoadingCourses = false;
@@ -884,7 +891,7 @@ class _UploadNoteFormState extends State<_UploadNoteForm> {
               else
                 Card(
                   elevation: 0,
-                  color: Theme.of(context).primaryColor.withOpacity(0.1),
+                  color: Theme.of(context).primaryColor.withValues(alpha: 0.1),
                   child: ListTile(
                     leading: const Icon(Icons.insert_drive_file),
                     title: Text(

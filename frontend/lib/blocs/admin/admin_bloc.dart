@@ -43,8 +43,9 @@ class AdminBloc extends Bloc<AdminEvent, AdminState> {
     emit(state.copyWith(status: AdminStatus.loading));
     try {
       final currentYear = _getCurrentUserYear();
-      if (currentYear == null)
+      if (currentYear == null) {
         throw Exception('Could not identify current user.');
+      }
 
       final peers = await AdminService.getStudentsByYear(currentYear);
       emit(state.copyWith(status: AdminStatus.success, peers: peers));
@@ -62,8 +63,9 @@ class AdminBloc extends Bloc<AdminEvent, AdminState> {
     emit(state.copyWith(status: AdminStatus.loading));
     try {
       final currentYear = _getCurrentUserYear();
-      if (currentYear == null)
+      if (currentYear == null) {
         throw Exception('Could not identify current user.');
+      }
 
       final juniors = await AdminService.getStudentsByYear(currentYear + 1);
       emit(state.copyWith(status: AdminStatus.success, juniors: juniors));

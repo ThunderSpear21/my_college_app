@@ -41,17 +41,19 @@ class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
           child: BlocListener<VerifyEmailBloc, VerifyEmailState>(
             listener: (context, state) {
               if (state is VerifyEmailSuccess) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('OTP Sent !!')),
-                );
+                ScaffoldMessenger.of(
+                  context,
+                ).showSnackBar(const SnackBar(content: Text('OTP Sent !!')));
 
                 Future.microtask(() {
                   Navigator.pushReplacement(
+                    // ignore: use_build_context_synchronously
                     context,
                     MaterialPageRoute(
-                      builder: (_) => RegisterScreen(
-                        email: _emailController.text.trim(),
-                      ),
+                      builder:
+                          (_) => RegisterScreen(
+                            email: _emailController.text.trim(),
+                          ),
                     ),
                   );
                 });
@@ -75,7 +77,9 @@ class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
                           hintText: "e.g. imh10050.22@bitmesra.ac.in",
                           labelText: "Email",
                           prefixIcon: const Icon(Icons.email_outlined),
-                          border: OutlineInputBorder(borderRadius: BorderRadius.circular(12),),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
                         ),
                         validator: _validateEmail,
                         keyboardType: TextInputType.emailAddress,
@@ -88,22 +92,24 @@ class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
                         ),
                       const SizedBox(height: 20),
                       ElevatedButton(
-                        onPressed: state is VerifyEmailLoading
-                            ? null
-                            : () {
-                                FocusScope.of(context).unfocus();
-                                _submitEmail(context);
-                              },
-                        child: state is VerifyEmailLoading
-                            ? const SizedBox(
-                                height: 20,
-                                width: 20,
-                                child: CircularProgressIndicator(
-                                  color: Colors.white,
-                                  strokeWidth: 2,
-                                ),
-                              )
-                            : const Text("Send OTP"),
+                        onPressed:
+                            state is VerifyEmailLoading
+                                ? null
+                                : () {
+                                  FocusScope.of(context).unfocus();
+                                  _submitEmail(context);
+                                },
+                        child:
+                            state is VerifyEmailLoading
+                                ? const SizedBox(
+                                  height: 20,
+                                  width: 20,
+                                  child: CircularProgressIndicator(
+                                    color: Colors.white,
+                                    strokeWidth: 2,
+                                  ),
+                                )
+                                : const Text("Send OTP"),
                       ),
                     ],
                   ),

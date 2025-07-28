@@ -36,14 +36,14 @@ class _LoginScreenState extends State<LoginScreen> {
   void _navigateToRegister() {
     Future.microtask(() {
       Navigator.push(
+        // ignore: use_build_context_synchronously
         context,
         MaterialPageRoute(builder: (_) => const VerifyEmailScreen()),
       );
     });
   }
 
-  void _forgotPassword() {
-  }
+  void _forgotPassword() {}
 
   @override
   Widget build(BuildContext context) {

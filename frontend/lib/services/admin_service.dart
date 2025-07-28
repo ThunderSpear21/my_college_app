@@ -65,7 +65,7 @@ class AdminService {
       },
       body: jsonEncode({'toToggleUserId': userId}),
     );
-    print(response.body);
+
     if (response.statusCode != 200) {
       final responseBody = json.decode(response.body);
       throw Exception(
@@ -98,7 +98,7 @@ class AdminService {
     );
 
     final response = await request.send();
-    print(jsonDecode(await response.stream.bytesToString()));
+
     if (response.statusCode != 201) {
       final responseBody = await response.stream.bytesToString();
       final decodedBody = json.decode(responseBody);
@@ -117,7 +117,7 @@ class AdminService {
       Uri.parse('$_courseBaseUrl/id/$courseId'),
       headers: {'Authorization': 'Bearer $token'},
     );
-    print(json.decode(response.body));
+
     if (response.statusCode != 200) {
       final responseBody = json.decode(response.body);
       throw Exception(
