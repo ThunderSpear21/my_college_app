@@ -17,7 +17,6 @@ const getAllCourseStructures = asyncHandler(async (req, res) => {
     .json(new apiResponse(200, allCourses, "All courses fetched"));
 });
 
-
 const getCoursesBySemester = asyncHandler(async (req, res) => {
   const semester = parseInt(req.params.semester);
 
@@ -33,7 +32,6 @@ const getCoursesBySemester = asyncHandler(async (req, res) => {
     .json(new apiResponse(200, allCourses, "Courses for the semster fetched"));
 });
 
-
 const getCourseById = asyncHandler(async (req, res) => {
   const courseId = req.params.courseId;
   if (!courseId) throw new apiError(404, "Missing courseId");
@@ -48,7 +46,6 @@ const getCourseById = asyncHandler(async (req, res) => {
     .status(200)
     .json(new apiResponse(200, course, "Course fetched !!"));
 });
-
 
 const uploadCourseStructure = asyncHandler(async (req, res) => {
   const pdfPath = req?.files?.coursePdf?.[0]?.path;
@@ -84,17 +81,15 @@ const uploadCourseStructure = asyncHandler(async (req, res) => {
   }
 });
 
-
 const deleteCourseById = asyncHandler(async (req, res) => {
   const courseId = req.params.courseId;
   if (!courseId) throw new apiError(400, "Missing courseId");
 
-  const course = await CourseStructure.findOne({ courseId });
+  const course = await CourseStructure.findOne({ _id: courseId });
   if (!course) throw new apiError(404, "Invalid courseId");
-  //console.log(course);
   await deleteFromCloudinary(course.url);
 
-  await CourseStructure.findOneAndDelete({ courseId });
+  await CourseStructure.findOneAndDelete({ _id: courseId });
 
   return res
     .status(200)

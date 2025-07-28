@@ -5,6 +5,7 @@ import 'package:frontend/blocs/auth/auth_event.dart';
 import 'package:frontend/blocs/auth/auth_state.dart';
 import 'package:frontend/blocs/theme/theme_bloc.dart';
 import 'package:frontend/blocs/theme/theme_event.dart';
+import 'package:frontend/screens/admin_screen.dart';
 import 'package:frontend/screens/connect_screen.dart';
 import 'package:frontend/screens/login_screen.dart';
 import 'package:frontend/screens/view_course_screen.dart';
@@ -142,12 +143,14 @@ class HomeScreen extends StatelessWidget {
                             icon: Icons.people,
                             text: "Connect",
                             colour: Colors.purpleAccent,
-                            onTap: () {Navigator.push(
+                            onTap: () {
+                              Navigator.push(
                                 context,
                                 MaterialPageRoute(
                                   builder: (_) => const ConnectScreen(),
                                 ),
-                              );},
+                              );
+                            },
                           ),
                           buildNavigationCard(
                             icon: Icons.checklist_rtl,
@@ -299,7 +302,12 @@ class HomeScreen extends StatelessWidget {
 
   Widget adminDashboard(BuildContext context, Size size) {
     return InkWell(
-      onTap: () {},
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (_) => const AdminScreen()),
+        );
+      },
       borderRadius: BorderRadius.circular(30),
       child: Container(
         height: size.height * 0.07,

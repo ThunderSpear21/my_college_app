@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:frontend/blocs/admin/admin_bloc.dart';
 import 'package:frontend/blocs/auth/auth_bloc.dart';
 import 'package:frontend/blocs/auth/auth_event.dart';
 import 'package:frontend/blocs/connect/connect_bloc.dart';
@@ -35,6 +36,7 @@ class MyApp extends StatelessWidget {
         BlocProvider(create: (_) => CourseBloc()),
         BlocProvider(create: (_) => NoteBloc()),
         BlocProvider(create: (_) => ConnectBloc()),
+        BlocProvider(create: (_) => AdminBloc(authBloc: authBloc)),
       ],
       child: BlocBuilder<ThemeBloc, ThemeState>(
         builder: (context, state) {

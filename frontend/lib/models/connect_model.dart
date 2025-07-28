@@ -11,6 +11,7 @@ class PublicProfile {
   final String email;
   final int yearOfAdmission;
   final bool isMentorEligible;
+  final bool isAdmin;
 
   PublicProfile({
     required this.id,
@@ -18,6 +19,7 @@ class PublicProfile {
     required this.email,
     required this.yearOfAdmission,
     required this.isMentorEligible,
+    required this.isAdmin
   });
 
   factory PublicProfile.fromJson(Map<String, dynamic> json) {
@@ -27,6 +29,7 @@ class PublicProfile {
       email: json['email'],
       yearOfAdmission: json['yearOfAdmission'],
       isMentorEligible: json['isMentorEligible'] ?? false,
+      isAdmin: json['isAdmin'] ?? false
     );
   }
 }

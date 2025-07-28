@@ -31,24 +31,4 @@ class CourseService {
       throw Exception('An error occurred while fetching courses.');
     }
   }
-
-  // static Future<void> getCourseById(String id) async {
-  //   final String? token = await SessionManager.getAccessToken();
-  //   if (token == null) {
-  //     throw Exception('Authentication token not found. Please log in.');
-  //   }
-  //   final Uri url = Uri.parse('$_baseUrl/id/$id');
-
-  //   try {
-  //     final response = await http.get(
-  //       url,
-  //       headers: {
-  //         'Content-Type': 'application/json; charset=UTF-8',
-  //         'Authorization': 'Bearer $token',
-  //       },
-  //     );
-  //     if (response.statusCode == 200) {
-  //     } else {}
-  //   } catch (e) {}
-  // }
 }

@@ -168,7 +168,7 @@ const uploadNotes = asyncHandler(async (req, res) => {
   if (!title || !courseId)
     throw new apiError(400, "title and courseId are required");
 
-  const course = await CourseStructure.findOne({ courseId });
+  const course = await CourseStructure.findOne({ _id: courseId });
   if (!course) throw new apiError(404, "Invalid courseId");
 
   try {
