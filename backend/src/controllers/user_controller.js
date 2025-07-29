@@ -56,6 +56,18 @@ const toggleMentorEligibility = asyncHandler(async (req, res) => {
     );
   }
 
+  const isRevoking = toToggleUser.isMentorEligible;
+
+  if (isRevoking) {
+    await User.updateMany(
+      { _id: { $in: toToggleUser.mentorToMenteeIds } },
+      { $unset: { menteeToMentorId: "" } }
+    );
+    toToggleUser.mentorToMenteeIds = [];
+    await toToggleUser.save();
+  }
+
+
   const updatedUser = await User.findByIdAndUpdate(toToggleUserId, {
     isMentorEligible: !toToggleUser.isMentorEligible,
   });

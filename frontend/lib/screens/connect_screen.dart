@@ -68,7 +68,7 @@ class _ConnectScreenState extends State<ConnectScreen> {
                 ..hideCurrentSnackBar()
                 ..showSnackBar(
                   const SnackBar(
-                    content: Text('Mentor request sent successfully!'),
+                    content: Text('Mentor connected successfully!'),
                     backgroundColor: Colors.green,
                   ),
                 );

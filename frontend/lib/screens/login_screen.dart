@@ -24,7 +24,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
     if (email.isEmpty || password.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please enter both email and password')),
+        const SnackBar(content: Text('Please enter both email and password'), backgroundColor: Colors.blueGrey,),
       );
       return;
     }
@@ -56,9 +56,12 @@ class _LoginScreenState extends State<LoginScreen> {
           child: BlocListener<LoginBloc, LoginState>(
             listener: (context, state) {
               if (state is LoginFailure) {
-                ScaffoldMessenger.of(
-                  context,
-                ).showSnackBar(SnackBar(content: Text(state.message)));
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(state.message),
+                    backgroundColor: Colors.red,
+                  ),
+                );
               } else if (state is LoginSuccess) {
                 context.read<AuthBloc>().add(LoggedIn());
               }

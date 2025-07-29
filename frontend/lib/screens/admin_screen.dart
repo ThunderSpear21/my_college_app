@@ -82,6 +82,12 @@ class _UserManagementTab extends StatelessWidget {
                               context.read<AdminBloc>().add(
                                 AdminStatusToggled(junior.id),
                               );
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text("Admin Status Toggled"),
+                                  backgroundColor: Colors.yellow,
+                                ),
+                              );
                             },
                           );
                         },
@@ -129,6 +135,12 @@ class _UserManagementTab extends StatelessWidget {
                             onAction: () {
                               context.read<AdminBloc>().add(
                                 AdminMentorStatusToggled(peer.id),
+                              );
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text("Admin Status Toggled"),
+                                  backgroundColor: Colors.yellow,
+                                ),
                               );
                             },
                           );
@@ -208,7 +220,13 @@ class _ContentManagementTab extends StatelessWidget {
                               context.read<AdminBloc>().add(
                                 AdminCourseDeleted(course.id),
                               );
-                              Navigator.of(context).pop(); // Close confirmation
+                              Navigator.of(context).pop();
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text("Course deleted successfully"),
+                                  backgroundColor: Colors.red,
+                                ),
+                              );
                             },
                           );
                         },
@@ -272,6 +290,12 @@ class _ContentManagementTab extends StatelessWidget {
                                 AdminNoteDeleted(note.id),
                               );
                               Navigator.of(context).pop();
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text("Notes deleted successfully"),
+                                  backgroundColor: Colors.red,
+                                ),
+                              );
                             },
                           );
                         },
@@ -561,6 +585,12 @@ class _UploadCourseFormState extends State<_UploadCourseForm> {
                 ),
               );
               Navigator.pop(context);
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text("Course uploaded successfully"),
+                  backgroundColor: Colors.green,
+                ),
+              );
             } else if (_selectedFile == null) {
               // Show an error if no file is selected
               ScaffoldMessenger.of(context).showSnackBar(
@@ -926,6 +956,12 @@ class _UploadNoteFormState extends State<_UploadNoteForm> {
                 ),
               );
               Navigator.pop(context);
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text("Notes uploaded successfully"),
+                  backgroundColor: Colors.green,
+                ),
+              );
             } else if (_selectedFile == null) {
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(
