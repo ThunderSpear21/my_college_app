@@ -66,125 +66,127 @@ class _LoginScreenState extends State<LoginScreen> {
                 context.read<AuthBloc>().add(LoggedIn());
               }
             },
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 40),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    'Welcome back 👋',
-                    style: theme.textTheme.headlineMedium?.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    'Login to your college account',
-                    style: theme.textTheme.bodyLarge?.copyWith(
-                      color: Colors.grey,
-                    ),
-                  ),
-                  const SizedBox(height: 32),
-
-                  // Email Field
-                  TextField(
-                    controller: _emailController,
-                    decoration: InputDecoration(
-                      hintText: "imh100XX.XX@bitmesra.ac.in",
-                      labelText: "E-mail",
-                      prefixIcon: const Icon(Icons.email_outlined),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
+            child: SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 40),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      'Welcome back 👋',
+                      style: theme.textTheme.headlineMedium?.copyWith(
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
-                    keyboardType: TextInputType.emailAddress,
-                  ),
-                  const SizedBox(height: 20),
-
-                  // Password Field
-                  TextField(
-                    controller: _passwordController,
-                    decoration: InputDecoration(
-                      hintText: "********",
-                      labelText: "Password",
-                      prefixIcon: const Icon(Icons.lock_outline),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
+                    const SizedBox(height: 8),
+                    Text(
+                      'Login to your college account',
+                      style: theme.textTheme.bodyLarge?.copyWith(
+                        color: Colors.grey,
                       ),
                     ),
-                    obscureText: true,
-                  ),
-                  const SizedBox(height: 10),
-
-                  // Forgot Password
-                  Align(
-                    alignment: Alignment.centerRight,
-                    child: TextButton(
-                      onPressed: _forgotPassword,
-                      child: const Text(
-                        'Forgot Password?',
-                        style: TextStyle(fontWeight: FontWeight.w500),
-                      ),
-                    ),
-                  ),
-
-                  const SizedBox(height: 20),
-
-                  // Login Button (with loading state handling)
-                  BlocBuilder<LoginBloc, LoginState>(
-                    builder: (context, state) {
-                      return ElevatedButton(
-                        onPressed: state is LoginLoading ? null : _login,
-                        style: ElevatedButton.styleFrom(
-                          padding: const EdgeInsets.symmetric(
-                            vertical: 12,
-                            horizontal: 60,
-                          ),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          elevation: 2,
+                    const SizedBox(height: 32),
+              
+                    // Email Field
+                    TextField(
+                      controller: _emailController,
+                      decoration: InputDecoration(
+                        hintText: "imh100XX.XX@bitmesra.ac.in",
+                        labelText: "E-mail",
+                        prefixIcon: const Icon(Icons.email_outlined),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
                         ),
-                        child:
-                            state is LoginLoading
-                                ? const SizedBox(
-                                  width: 24,
-                                  height: 24,
-                                  child: CircularProgressIndicator(
-                                    strokeWidth: 2,
-                                    color: Colors.white,
+                      ),
+                      keyboardType: TextInputType.emailAddress,
+                    ),
+                    const SizedBox(height: 20),
+              
+                    // Password Field
+                    TextField(
+                      controller: _passwordController,
+                      decoration: InputDecoration(
+                        hintText: "********",
+                        labelText: "Password",
+                        prefixIcon: const Icon(Icons.lock_outline),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                      ),
+                      obscureText: true,
+                    ),
+                    const SizedBox(height: 10),
+              
+                    // Forgot Password
+                    Align(
+                      alignment: Alignment.centerRight,
+                      child: TextButton(
+                        onPressed: _forgotPassword,
+                        child: const Text(
+                          'Forgot Password?',
+                          style: TextStyle(fontWeight: FontWeight.w500),
+                        ),
+                      ),
+                    ),
+              
+                    const SizedBox(height: 20),
+              
+                    // Login Button (with loading state handling)
+                    BlocBuilder<LoginBloc, LoginState>(
+                      builder: (context, state) {
+                        return ElevatedButton(
+                          onPressed: state is LoginLoading ? null : _login,
+                          style: ElevatedButton.styleFrom(
+                            padding: const EdgeInsets.symmetric(
+                              vertical: 12,
+                              horizontal: 60,
+                            ),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            elevation: 2,
+                          ),
+                          child:
+                              state is LoginLoading
+                                  ? const SizedBox(
+                                    width: 24,
+                                    height: 24,
+                                    child: CircularProgressIndicator(
+                                      strokeWidth: 2,
+                                      color: Colors.white,
+                                    ),
+                                  )
+                                  : const Text(
+                                    'Login',
+                                    style: TextStyle(fontSize: 16),
                                   ),
-                                )
-                                : const Text(
-                                  'Login',
-                                  style: TextStyle(fontSize: 16),
-                                ),
-                      );
-                    },
-                  ),
-
-                  const SizedBox(height: 16),
-
-                  // Register Button
-                  ElevatedButton(
-                    onPressed: _navigateToRegister,
-                    style: ElevatedButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(
-                        vertical: 12,
-                        horizontal: 30,
-                      ),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      elevation: 2,
+                        );
+                      },
                     ),
-                    child: const Text(
-                      'New? Register',
-                      style: TextStyle(fontSize: 16),
+              
+                    const SizedBox(height: 16),
+              
+                    // Register Button
+                    ElevatedButton(
+                      onPressed: _navigateToRegister,
+                      style: ElevatedButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(
+                          vertical: 12,
+                          horizontal: 30,
+                        ),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        elevation: 2,
+                      ),
+                      child: const Text(
+                        'New? Register',
+                        style: TextStyle(fontSize: 16),
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           ),

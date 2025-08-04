@@ -1,10 +1,12 @@
 import 'dart:convert';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:frontend/models/connect_model.dart';
 import 'package:http/http.dart' as http;
 import 'session_manager.dart';
 
 class ConnectService {
-  static const String _baseUrl = 'http://10.0.2.2:8000/api/connect';
+  static String baseUrl = dotenv.env['BASE_URL']!;
+  static final String _baseUrl = '$baseUrl/connect';
 
   static Future<List<PublicProfile>> getAvailableMentors() async {
     final token = await SessionManager.getAccessToken();
@@ -58,7 +60,7 @@ class ConnectService {
       return menteesJson.map((json) => PublicProfile.fromJson(json)).toList();
     } else if (response.statusCode == 403) {
       return [];
-    }else {
+    } else {
       throw Exception('Failed to load mentees');
     }
   }

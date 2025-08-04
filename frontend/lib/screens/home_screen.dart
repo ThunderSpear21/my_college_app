@@ -78,11 +78,15 @@ class HomeScreen extends StatelessWidget {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: [
-                            Text(
-                              "Welcome Back,\n${user['name'] ?? 'User'}!",
-                              style: const TextStyle(
-                                fontSize: 26,
-                                fontWeight: FontWeight.bold,
+                            const SizedBox(width: 10,),
+                            Expanded(
+                              child: Text(
+                                "Welcome Back,\n${user['name'] ?? 'User'}!",
+                                style: const TextStyle(
+                                  fontSize: 26,
+                                  fontWeight: FontWeight.bold,
+                                  overflow: TextOverflow.ellipsis
+                                ),
                               ),
                             ),
                             Container(
@@ -101,6 +105,7 @@ class HomeScreen extends StatelessWidget {
                                 icon: const Icon(Icons.person_2, size: 40),
                               ),
                             ),
+                            const SizedBox(width: 10,)
                           ],
                         ),
                       ),
@@ -204,7 +209,9 @@ class HomeScreen extends StatelessWidget {
                     fontSize: 22,
                     fontWeight: FontWeight.bold,
                     color: isDarkMode ? Colors.white : Colors.black87,
+                    overflow: TextOverflow.ellipsis
                   ),
+                  maxLines: 2,
                 ),
                 Text(
                   user['email'] ?? 'user@email.com',

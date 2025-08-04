@@ -1,14 +1,16 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:frontend/models/connect_model.dart';
 import 'package:http/http.dart' as http;
 import 'session_manager.dart';
 
 class AdminService {
   // Base URLs for different API sections
-  static const String _userBaseUrl = 'http://10.0.2.2:8000/api/user';
-  static const String _courseBaseUrl = 'http://10.0.2.2:8000/api/course';
-  static const String _notesBaseUrl = 'http://10.0.2.2:8000/api/notes';
+  static String baseUrl = dotenv.env['BASE_URL']!;
+  static final String _userBaseUrl = '$baseUrl/user';
+  static final String _courseBaseUrl = '$baseUrl/course';
+  static final String _notesBaseUrl = '$baseUrl/notes';
 
   // --- User Management ---
 

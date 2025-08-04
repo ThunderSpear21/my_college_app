@@ -14,8 +14,10 @@ import 'package:frontend/blocs/verify_email/verify_email_bloc.dart';
 import 'package:frontend/blocs/view_profile/view_profile_bloc.dart';
 import 'package:frontend/screens/auth_wrapper.dart';
 import 'package:frontend/theme/app_theme.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
-void main() {
+Future main() async {
+  await dotenv.load();
   runApp(const MyApp());
 }
 

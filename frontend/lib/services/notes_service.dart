@@ -1,10 +1,12 @@
 import 'dart:convert';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:frontend/models/notes_model.dart';
 import 'package:http/http.dart' as http;
 import 'session_manager.dart';
 
 class NoteService {
-  static const String _baseUrl = 'http://10.0.2.2:8000/api/notes';
+  static String baseUrl = dotenv.env['BASE_URL']!;
+  static final String _baseUrl = '$baseUrl/notes';
   static Future<List<Note>> getNotesBySemester(int semester) async {
     final String? token = await SessionManager.getAccessToken();
     if (token == null) {

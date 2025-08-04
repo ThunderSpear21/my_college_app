@@ -1,10 +1,12 @@
 import 'dart:convert';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 import '../models/course_model.dart';
 import 'session_manager.dart';
 
 class CourseService {
-  static const String _baseUrl = 'http://10.0.2.2:8000/api/course';
+  static String baseUrl = dotenv.env['BASE_URL']!;
+  static final String _baseUrl = '$baseUrl/course';
   static Future<List<Course>> getCoursesBySemester(int semester) async {
     final String? token = await SessionManager.getAccessToken();
     if (token == null) {
