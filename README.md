@@ -65,6 +65,8 @@ CollegeConnect/
 </p>
 <p align="center">
   <img src="6.png" alt="Screenshot 5" width="20%" />
+  <img src="9.png" alt="Screenshot 4" width="20%" />
+  <img src="10.png" alt="Screenshot 4" width="20%" />
   <img src="11.png" alt="Screenshot 6" width="20%" />
   <img src="14.png" alt="Screenshot 7" width="20%" />
 </p>
